@@ -27,6 +27,13 @@ class HTTPException(Exception):
         class_name = self.__class__.__name__
         return f"{class_name}(status_code={self.status_code!r}, detail={self.detail!r})"
 
+    def __reduce__(
+        self,
+    ) -> tuple[
+        typing.Type[HTTPException], tuple[int, str | None, dict[str, str] | None]
+    ]:
+        return (HTTPException, (self.status_code, self.detail, self.headers))
+
 
 class WebSocketException(Exception):
     def __init__(self, code: int, reason: str | None = None) -> None:

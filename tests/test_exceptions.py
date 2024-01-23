@@ -202,3 +202,12 @@ def test_request_in_app_and_handler_is_the_same_object(client) -> None:
     response = client.post("/consume_body_in_endpoint_and_handler", content=b"Hello!")
     assert response.status_code == 422
     assert response.json() == {"body": "Hello!"}
+
+
+def test_pickle_http_exception():
+    import pickle
+
+    exception = HTTPException(status_code=404)
+    data = pickle.dumps(exception)
+    reproduced = pickle.loads(data)
+    assert repr(reproduced) == repr(exception)
